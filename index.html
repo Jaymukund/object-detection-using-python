@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YOLO Object Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Real-Time Object Detection</h1>
+    <img src="{{ url_for('video') }}" id="videoFeed" />
+    <div class="controls">
+        <label>
+            <input type="checkbox" id="aiToggle" checked />
+            Toggle AI
+        </label>
+
+        <label for="fps">FPS:</label>
+        <input type="range" id="fps" min="1" max="60" value="16">
+        <span id="fpsValue">16</span>
+    </div>
+
+    <script>
+        const toggle = document.getElementById("aiToggle");
+        const fpsSlider = document.getElementById("fps");
+        const fpsValue = document.getElementById("fpsValue");
+
+        toggle.addEventListener("change", () => {
+            fetch('/toggle_ai', { method: 'POST' });
+        });
+
+        fpsSlider.addEventListener("input", () => {
+            fpsValue.textContent = fpsSlider.value;
+            const formData = new FormData();
+            formData.append("fps", fpsSlider.value);
+            fetch('/set_fps', { method: 'POST', body: formData });
+        });
+    </script>
+</body>
+</html>
